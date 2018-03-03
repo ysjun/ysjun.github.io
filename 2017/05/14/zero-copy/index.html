@@ -97,16 +97,16 @@
 <meta property="og:url" content="http://yoursite.com/2017/05/14/zero-copy/index.html">
 <meta property="og:site_name" content="三月的雨">
 <meta property="og:description" content="Zero Copy分析 传统的I/O使用传统的I/O程序读取文件内容, 并写入到另一个文件(或Socket), 如下程序: 12File.read(fileDesc, buf, len);Socket.send(socket, buf, len); 会有较大的性能开销, 主要表现在一下两方面:   上下文切换(context switch), 此处有4次用户态和内核态的切换 Buffer内存开销,">
-<meta property="og:image" content="http://images.cnitblog.com/i/399666/201404/280055549984508.gif">
-<meta property="og:image" content="http://images.cnitblog.com/i/399666/201404/280058111076424.gif">
-<meta property="og:image" content="http://images.cnitblog.com/i/399666/201404/280111422834712.gif">
-<meta property="og:image" content="http://images.cnitblog.com/i/399666/201404/280111503305104.gif">
-<meta property="og:image" content="http://images.cnitblog.com/i/399666/201404/280117369558033.gif">
-<meta property="og:updated_time" content="2017-05-14T05:15:13.334Z">
+<meta property="og:image" content="http://yoursite.com/images/tags/zerocopy/zerocopy-01.png">
+<meta property="og:image" content="http://yoursite.com/images/tags/zerocopy/zerocopy-02.png">
+<meta property="og:image" content="http://yoursite.com/images/tags/zerocopy/zerocopy-03.png">
+<meta property="og:image" content="http://yoursite.com/images/tags/zerocopy/zerocopy-04.png">
+<meta property="og:image" content="http://yoursite.com/images/tags/zerocopy/zerocopy-05.png">
+<meta property="og:updated_time" content="2018-03-03T06:31:57.239Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Zero Copy">
 <meta name="twitter:description" content="Zero Copy分析 传统的I/O使用传统的I/O程序读取文件内容, 并写入到另一个文件(或Socket), 如下程序: 12File.read(fileDesc, buf, len);Socket.send(socket, buf, len); 会有较大的性能开销, 主要表现在一下两方面:   上下文切换(context switch), 此处有4次用户态和内核态的切换 Buffer内存开销,">
-<meta name="twitter:image" content="http://images.cnitblog.com/i/399666/201404/280055549984508.gif">
+<meta name="twitter:image" content="http://yoursite.com/images/tags/zerocopy/zerocopy-01.png">
 
 
 
@@ -408,12 +408,12 @@
 <li>Buffer内存开销, 一个是应用程序buffer, 另一个是系统读取buffer以及socket buffer</li>
 </ul>
 </blockquote>
-<p>其运行示意图如下<br><img src="http://images.cnitblog.com/i/399666/201404/280055549984508.gif" alt=""></p>
+<p>其运行示意图如下<br><img src="/images/tags/zerocopy/zerocopy-01.png" alt=""></p>
 <p>1) 先将文件内容从磁盘中拷贝到操作系统buffer</p>
 <p>2) 再从操作系统buffer拷贝到程序应用buffer</p>
 <p>3) 从程序buffer拷贝到socket buffer(也可以是file)</p>
 <p>4) 从socket buffer拷贝到协议引擎.</p>
-<p>上下文切换示意图如下<br><img src="http://images.cnitblog.com/i/399666/201404/280058111076424.gif" alt=""></p>
+<p>上下文切换示意图如下<br><img src="/images/tags/zerocopy/zerocopy-02.png" alt=""></p>
 <p>1) 调用read(), 程序切换到内核态</p>
 <p>2) read()调用完毕, 返回数据, 程序切换回用户态</p>
 <p>3) 调用send(), 程序切换到内核态</p>
@@ -425,10 +425,10 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">transferTo</span><span class="params">(<span class="keyword">long</span> position, <span class="keyword">long</span> count, WritableByteChannel target)</span></span>;</div></pre></td></tr></table></figure>
 <p>他的底层调用的是系统调用sendFile()方法</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/socket.h&gt;</span></span></div><div class="line"><span class="keyword">ssize_t</span> sendfile(<span class="keyword">int</span> out_fd, <span class="keyword">int</span> in_fd, <span class="keyword">off_t</span> *offset, <span class="keyword">size_t</span> count);</div></pre></td></tr></table></figure>
-<p>其运行示意图如下<br><img src="http://images.cnitblog.com/i/399666/201404/280111422834712.gif" alt=""></p>
-<p>上下文切换示意图如下<br><img src="http://images.cnitblog.com/i/399666/201404/280111503305104.gif" alt=""></p>
+<p>其运行示意图如下<br><img src="/images/tags/zerocopy/zerocopy-03.png" alt=""></p>
+<p>上下文切换示意图如下<br><img src="/images/tags/zerocopy/zerocopy-04.png" alt=""></p>
 <p>这样, 省去了两次buffer的copy, 并且上下文切换降到了2次(调用transferTo()进入内核态, 调用完毕返回用户态)</p>
-<p>Linux 2.4 及以后的内核, 又做了改进, 不再使用socket buffer, 而是直接将read buffer数据拷贝到协议引擎, 而socket buffer只会记录数据位置的描述符和数据长度,如下<br><img src="http://images.cnitblog.com/i/399666/201404/280117369558033.gif" alt=""></p>
+<p>Linux 2.4 及以后的内核, 又做了改进, 不再使用socket buffer, 而是直接将read buffer数据拷贝到协议引擎, 而socket buffer只会记录数据位置的描述符和数据长度,如下<br><img src="/images/tags/zerocopy/zerocopy-05.png" alt=""></p>
 <hr>
 <p>作者 [soar]<br>2017 年 05月 14日    </p>
 <hr>
