@@ -17,6 +17,22 @@
       </tags>
   </entry>
   <entry>
+    <title><![CDATA[rocketmq高性能之道]]></title>
+    <url>%2F2017%2F07%2F16%2Frocketmq%E9%AB%98%E6%80%A7%E8%83%BD%E4%B9%8B%E9%81%93%2F</url>
+    <content type="text"><![CDATA[rocketmq高性能之道 作者 [soar]2017年 07月 16日]]></content>
+      <tags>
+        <tag>rocketmq</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[kafka高性能之道]]></title>
+    <url>%2F2017%2F06%2F15%2Fkafka%E9%AB%98%E6%80%A7%E8%83%BD%E4%B9%8B%E9%81%93%2F</url>
+    <content type="text"><![CDATA[kafka高性能之道 作者 [soar]2017年 06月 15日]]></content>
+      <tags>
+        <tag>kafka</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[mysql字段带有回车换行符号]]></title>
     <url>%2F2016%2F09%2F15%2Fmysql-field-newline%2F</url>
     <content type="text"><![CDATA[mysql字段带有回车换行符号引发数据为空的问题 发现问题在一次实践中发现，明明看到数据库表中某个字段有数据，但是通过程序去查，没有查出来。 分析问题出现这个问题之后，然后去点击这个字段的数据，发现数据为空，最后才发现了问题所在，因为这个数据里面携带回车换行符号岛导致获取的数据为空。 解决问题删除该字段的回车换行符即可解决这个问题。 作者 [soar]2016年 09月 15日]]></content>
