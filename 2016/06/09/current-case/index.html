@@ -97,7 +97,7 @@
 <meta property="og:url" content="http://yoursite.com/2016/06/09/current-case/index.html">
 <meta property="og:site_name" content="三月的雨">
 <meta property="og:description" content="一般来说web高并发需要解决的问题如下： 1.应用服务器的高并发 2.数据库的高并发  持久化的数据mysql或者oracle（关系型） 缓存型数据库redis或者memcache（非关系型）   一、应用服务器的高并发一般应用服务器的架构都是对台tomcat，加上一台nginx反向代理服务器组成一个小型集群，这样虽然可以承受的住一般的高并发访问，但是对于高并发的话，就有些吃紧。可能大家会觉">
-<meta property="og:updated_time" content="2018-03-03T06:42:54.565Z">
+<meta property="og:updated_time" content="2018-03-03T06:51:17.108Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="web高并发案例分析">
 <meta name="twitter:description" content="一般来说web高并发需要解决的问题如下： 1.应用服务器的高并发 2.数据库的高并发  持久化的数据mysql或者oracle（关系型） 缓存型数据库redis或者memcache（非关系型）   一、应用服务器的高并发一般应用服务器的架构都是对台tomcat，加上一台nginx反向代理服务器组成一个小型集群，这样虽然可以承受的住一般的高并发访问，但是对于高并发的话，就有些吃紧。可能大家会觉">
@@ -424,7 +424,7 @@
 <p>这里不讨论如何实现文章的搜索，文章搜索的实现会在另一篇文章中进行总结分享。一般除了要返回查询的文章的数据，还需要对用户行为的日志进行记录，用于统计和分析用户的行为，方便平台能够能好的迎合用户的需求，这里的日志输入采用了slf4j+logback，日志收集采用了ftp，日志存储采用了mongodb，日志统计与分析可用spring tsak定时任务定统计，展现给分析人员进行分析。这里的除了日志输出在本系统，其他都可以交给日志分析系统，也就是统计系统来做，可以提高单个系统的并发和降低系统的耦合度，日志分析系统主要采用了slf4j+logback+ftp+mongodb,当然还可以采用性能更优的slf4j+logback+kafka+mongodb+Elasticsearch+kibana，其中Elasticsearch是个开源分布式搜索引擎，它的特点有：分布式，零配置，自动发现，索引自动分片，索引副本机制，restful风格接口，多数据源，自动搜索负载等，kibana也是一个开源和免费的工具，他Kibana可以为ElasticSearch 提供的日志分析友好的 Web 界面，可以帮助您汇总、分析和搜索重要数据日志。</p>
 <h2 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a>五、总结</h2><p>对于高并发的Web系统，一般都会用到集群，分布式，分布式缓存，分布式消息队列，分布式日志收集等技术，这些技术不仅能解决高并发的问题，还可以构建高并发，高流量，高性能，高可用以及可扩展的大型web系统。</p>
 <hr>
-<p>作者 [soar]<br>2017 年 06月 09日</p>
+<p>作者 [soar]<br>2016年 06月 09日</p>
 
       
     </div>
@@ -576,7 +576,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">10</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -589,7 +589,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

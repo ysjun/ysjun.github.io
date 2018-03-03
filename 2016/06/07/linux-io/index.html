@@ -102,7 +102,7 @@
 <meta property="og:image" content="http://yoursite.com/images/tags/linux/io/iom.png">
 <meta property="og:image" content="http://yoursite.com/images/tags/linux/io/aio.png">
 <meta property="og:image" content="http://yoursite.com/images/tags/linux/io/io.png">
-<meta property="og:updated_time" content="2018-03-03T06:43:25.971Z">
+<meta property="og:updated_time" content="2018-03-03T06:53:19.563Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="linux-io">
 <meta name="twitter:description" content="是时候表演真正的技术了-linux IO 本文讨论的背景是Linux环境下的Network IO。本文最重要的参考文献是Richard Stevens的“UNIX® Network Programming Volume 1, Third Edition: The Sockets Networking ”，6.2节“I/O Models”. Stevens在文章中一共比较了五种IO Model：">
@@ -444,7 +444,7 @@
 <p>各个IO Model的比较如图所示：<br><img src="/images/tags/linux/io/io.png" alt="I/O"> </p>
 <p>经过上面的介绍，会发现non-blocking IO和asynchronous IO的区别还是很明显的。在non-blocking IO中，虽然进程大部分时间都不会被block，但是它仍然要求进程去主动的check，并且当数据准备完成以后，也需要进程主动的再次调用recvfrom来将数据拷贝到用户内存。而asynchronous IO则完全不同。它就像是用户进程将整个IO操作交给了他人（kernel）完成，然后他人做完后发信号通知。在此期间，用户进程不需要去检查IO操作的状态，也不需要主动的去拷贝数据。</p>
 <hr>
-<p>作者 [soar]<br>2017 年 06月 06日</p>
+<p>作者 [soar]<br>2016年 06月 07日</p>
 
       
     </div>
@@ -487,8 +487,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/05/14/zero-copy/" rel="next" title="Zero Copy">
-                <i class="fa fa-chevron-left"></i> Zero Copy
+              <a href="/2016/05/14/zero-copy/" rel="next" title="zero copy">
+                <i class="fa fa-chevron-left"></i> zero copy
               </a>
             
           </div>
@@ -596,7 +596,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">10</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -609,7 +609,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
