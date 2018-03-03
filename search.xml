@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title><![CDATA[request double]]></title>
-    <url>%2F2017%2F10%2F11%2Frequest-double%2F</url>
-    <content type="text"><![CDATA[request double 发现问题今天在对向项目进行接口测试时，通过fiddler抓包，发现有同一个接口在同一时间请求了两次，第一次请求的url末尾一个没带/，第二次请求带了/，如下所示： 导致的问题因为重复请求了，所以会导致这样会导致流量翻倍。 分析问题首先分析客户端发出的请求的过程，c-&gt;dns-&gt;elb-&gt;nginx-&gt;tomcat，通过nginx和tomcat记录的日志发现第一次请求没走到tomcat，在nginx这层就被重定向了，导致301，所以初步确定是nginx配置路劲的问题。查看nginx配置发现，如下所示：发现该nginx转发配置了要请求的URL带上/，所以初步判断是由于第一次没有带/，进行了重定向301，然后nginx对该请求自动带上了/。 解决问题只要去掉location中的最后的/，然后重启nginx即可解决问题。 作者 [soar]2017年 10月 11日]]></content>
+    <title><![CDATA[客户端重复请求]]></title>
+    <url>%2F2017%2F10%2F11%2Fclient-request-double%2F</url>
+    <content type="text"><![CDATA[客户端请求重复导致流量翻倍 发现问题今天在对向项目进行接口测试时，通过fiddler抓包，发现有同一个接口在同一时间请求了两次，第一次请求的url末尾一个没带/，第二次请求带了/，如下所示： 导致的问题因为重复请求了，所以会导致这样会导致流量翻倍。 分析问题首先分析客户端发出的请求的过程，c-&gt;dns-&gt;elb-&gt;nginx-&gt;tomcat，通过nginx和tomcat记录的日志发现第一次请求没走到tomcat，在nginx这层就被重定向了，导致301，所以初步确定是nginx配置路劲的问题。查看nginx配置发现，如下所示：发现该nginx转发配置了要请求的URL带上/，所以初步判断是由于第一次没有带/，进行了重定向301，然后nginx对该请求自动带上了/。 解决问题只要去掉location中的最后的/，然后重启nginx即可解决问题。 作者 [soar]2017年 10月 11日]]></content>
       <tags>
-        <tag>nginx</tag>
+        <tag>线上事故</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[客户端无限重试]]></title>
+    <url>%2F2017%2F10%2F03%2Fclient-retry-accident%2F</url>
+    <content type="text"><![CDATA[客户端无限重试导致的线上事故 发现问题导致的问题分析问题解决问题总结问题 作者 [soar]2017年 11月 03日]]></content>
+      <tags>
+        <tag>线上事故</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[mysql字段带有回车换行符号]]></title>
+    <url>%2F2016%2F09%2F15%2Fmysql-field-newline%2F</url>
+    <content type="text"><![CDATA[mysql字段带有回车换行符号引发数据为空的问题 发现问题在一次实践中发现，明明看到数据库表中某个字段有数据，但是通过程序去查，没有查出来。 分析问题出现这个问题之后，然后去点击这个字段的数据，发现数据为空，最后才发现了问题所在，因为这个数据里面携带回车换行符号岛导致获取的数据为空。 解决问题删除该字段的回车换行符即可解决这个问题。 作者 [soar]2016年 09月 15日]]></content>
+      <tags>
+        <tag>mysql</tag>
       </tags>
   </entry>
   <entry>
@@ -43,14 +59,6 @@
   <entry>
     <title><![CDATA[zero copy]]></title>
     <url>%2F2016%2F05%2F14%2Fzero-copy%2F</url>
-    <content type="text"><![CDATA[Zero Copy分析 传统的I/O使用传统的I/O程序读取文件内容, 并写入到另一个文件(或Socket), 如下程序: 12File.read(fileDesc, buf, len);Socket.send(socket, buf, len); 会有较大的性能开销, 主要表现在一下两方面: 上下文切换(context switch), 此处有4次用户态和内核态的切换 Buffer内存开销, 一个是应用程序buffer, 另一个是系统读取buffer以及socket buffer 其运行示意图如下 1) 先将文件内容从磁盘中拷贝到操作系统buffer 2) 再从操作系统buffer拷贝到程序应用buffer 3) 从程序buffer拷贝到socket buffer(也可以是file) 4) 从socket buffer拷贝到协议引擎. 上下文切换示意图如下 1) 调用read(), 程序切换到内核态 2) read()调用完毕, 返回数据, 程序切换回用户态 3) 调用send(), 程序切换到内核态 4) send()完毕, 程序切换回用户态 操作系统使用 read buffer 的好处是”预读”, 当你的程序需要对文件数据做处理, 并且每次读取的数据小于read buffer 的时候, 可以先将多数数据预读到 read buffer, 这样程序在读取的时候效率会更高. 但是当你需要读取的数据大于操作系统的read buffer的时候, read buffer则会成为累赘. 另外, 在你的程序不需要处理数据, 而仅仅只是做数据转移的时候, 程序buffer则会成为不必要的开销. 上面会涉及到多次上下文切换以及多次数据拷贝, 很大一部分cpu及内存开销是可以避免的, 于是有了zerocopy技术. ZeroCopyzerocopy技术省去了将操作系统的read buffer拷贝到程序的buffer, 以及从程序buffer拷贝到socket buffer的步骤, 直接将 read buffer 拷贝到 socket buffer. java 的 FileChannel.transferTo() 方法就是这样的实现, 这个实现是依赖于操作系统底层的sendFile()实现的. 1public void transferTo(long position, long count, WritableByteChannel target); 他的底层调用的是系统调用sendFile()方法 12#include &lt;sys/socket.h&gt;ssize_t sendfile(int out_fd, int in_fd, off_t *offset, size_t count); 其运行示意图如下 上下文切换示意图如下 这样, 省去了两次buffer的copy, 并且上下文切换降到了2次(调用transferTo()进入内核态, 调用完毕返回用户态) Linux 2.4 及以后的内核, 又做了改进, 不再使用socket buffer, 而是直接将read buffer数据拷贝到协议引擎, 而socket buffer只会记录数据位置的描述符和数据长度,如下 作者 [soar]2016年 05月 14日 参考献文如下[1] http://www.ibm.com/developerworks/library/j-zerocopy/]]></content>
-      <tags>
-        <tag>zero copy</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[zero copy]]></title>
-    <url>%2F2016%2F05%2F14%2Fmysql-field-%2F</url>
     <content type="text"><![CDATA[Zero Copy分析 传统的I/O使用传统的I/O程序读取文件内容, 并写入到另一个文件(或Socket), 如下程序: 12File.read(fileDesc, buf, len);Socket.send(socket, buf, len); 会有较大的性能开销, 主要表现在一下两方面: 上下文切换(context switch), 此处有4次用户态和内核态的切换 Buffer内存开销, 一个是应用程序buffer, 另一个是系统读取buffer以及socket buffer 其运行示意图如下 1) 先将文件内容从磁盘中拷贝到操作系统buffer 2) 再从操作系统buffer拷贝到程序应用buffer 3) 从程序buffer拷贝到socket buffer(也可以是file) 4) 从socket buffer拷贝到协议引擎. 上下文切换示意图如下 1) 调用read(), 程序切换到内核态 2) read()调用完毕, 返回数据, 程序切换回用户态 3) 调用send(), 程序切换到内核态 4) send()完毕, 程序切换回用户态 操作系统使用 read buffer 的好处是”预读”, 当你的程序需要对文件数据做处理, 并且每次读取的数据小于read buffer 的时候, 可以先将多数数据预读到 read buffer, 这样程序在读取的时候效率会更高. 但是当你需要读取的数据大于操作系统的read buffer的时候, read buffer则会成为累赘. 另外, 在你的程序不需要处理数据, 而仅仅只是做数据转移的时候, 程序buffer则会成为不必要的开销. 上面会涉及到多次上下文切换以及多次数据拷贝, 很大一部分cpu及内存开销是可以避免的, 于是有了zerocopy技术. ZeroCopyzerocopy技术省去了将操作系统的read buffer拷贝到程序的buffer, 以及从程序buffer拷贝到socket buffer的步骤, 直接将 read buffer 拷贝到 socket buffer. java 的 FileChannel.transferTo() 方法就是这样的实现, 这个实现是依赖于操作系统底层的sendFile()实现的. 1public void transferTo(long position, long count, WritableByteChannel target); 他的底层调用的是系统调用sendFile()方法 12#include &lt;sys/socket.h&gt;ssize_t sendfile(int out_fd, int in_fd, off_t *offset, size_t count); 其运行示意图如下 上下文切换示意图如下 这样, 省去了两次buffer的copy, 并且上下文切换降到了2次(调用transferTo()进入内核态, 调用完毕返回用户态) Linux 2.4 及以后的内核, 又做了改进, 不再使用socket buffer, 而是直接将read buffer数据拷贝到协议引擎, 而socket buffer只会记录数据位置的描述符和数据长度,如下 作者 [soar]2016年 05月 14日 参考献文如下[1] http://www.ibm.com/developerworks/library/j-zerocopy/]]></content>
       <tags>
         <tag>zero copy</tag>
