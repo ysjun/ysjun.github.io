@@ -74,7 +74,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="运维," />
 
 
 
@@ -90,15 +90,17 @@
 
 
 
-<meta name="description" content="爱生活的码农">
-<meta property="og:type" content="website">
-<meta property="og:title" content="三月的雨">
-<meta property="og:url" content="http://yoursite.com/tags/Markdown/index.html">
+<meta name="description" content="问题：在多线程和高并发环境下，如果有一个平均运行一百万次才出现一次的bug，你如何调试这个bug？ 先问清楚bug是属于哪一类，是崩溃？还是数据不一致？以及对基于这个bug的业务对系统造成的影响严不严重然后尽可能的问更多的资料，才能考虑用什么方法。在考虑用什么方法之前应该从管理上要考虑bug的严重性与成本/时间的问题。  1.选择解决问题的方法，无非就两种：  a.解决   b.回退版本+解决，">
+<meta name="keywords" content="运维">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何快速的解决线上的问题">
+<meta property="og:url" content="http://yoursite.com/2016/06/08/solve-question/index.html">
 <meta property="og:site_name" content="三月的雨">
-<meta property="og:description" content="爱生活的码农">
+<meta property="og:description" content="问题：在多线程和高并发环境下，如果有一个平均运行一百万次才出现一次的bug，你如何调试这个bug？ 先问清楚bug是属于哪一类，是崩溃？还是数据不一致？以及对基于这个bug的业务对系统造成的影响严不严重然后尽可能的问更多的资料，才能考虑用什么方法。在考虑用什么方法之前应该从管理上要考虑bug的严重性与成本/时间的问题。  1.选择解决问题的方法，无非就两种：  a.解决   b.回退版本+解决，">
+<meta property="og:updated_time" content="2018-03-03T06:43:33.912Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="三月的雨">
-<meta name="twitter:description" content="爱生活的码农">
+<meta name="twitter:title" content="如何快速的解决线上的问题">
+<meta name="twitter:description" content="问题：在多线程和高并发环境下，如果有一个平均运行一百万次才出现一次的bug，你如何调试这个bug？ 先问清楚bug是属于哪一类，是崩溃？还是数据不一致？以及对基于这个bug的业务对系统造成的影响严不严重然后尽可能的问更多的资料，才能考虑用什么方法。在考虑用什么方法之前应该从管理上要考虑bug的严重性与成本/时间的问题。  1.选择解决问题的方法，无非就两种：  a.解决   b.回退版本+解决，">
 
 
 
@@ -126,13 +128,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/Markdown/"/>
+  <link rel="canonical" href="http://yoursite.com/2016/06/08/solve-question/"/>
 
 
 
 
 
-  <title>标签: Markdown | 三月的雨</title>
+  <title>如何快速的解决线上的问题 | 三月的雨</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -157,7 +159,7 @@
     
   
 
-  <div class="container sidebar-position-left  ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -275,44 +277,240 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h1>Markdown<small>标签</small>
-      </h1>
-    </div>
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/06/08/solve-question/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="soar">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="三月的雨">
+    </span>
 
     
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">如何快速的解决线上的问题</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-06-08T18:51:14+08:00">
+                2016-06-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a class="cloud-tie-join-count" href="/2016/06/08/solve-question/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count join-count" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  565
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  2
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
       
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+      
+        <hr>
+<h4 id="问题：在多线程和高并发环境下，如果有一个平均运行一百万次才出现一次的bug，你如何调试这个bug？"><a href="#问题：在多线程和高并发环境下，如果有一个平均运行一百万次才出现一次的bug，你如何调试这个bug？" class="headerlink" title="问题：在多线程和高并发环境下，如果有一个平均运行一百万次才出现一次的bug，你如何调试这个bug？"></a>问题：在多线程和高并发环境下，如果有一个平均运行一百万次才出现一次的bug，你如何调试这个bug？</h4><blockquote>
+<p>先问清楚bug是属于哪一类，是崩溃？还是数据不一致？以及对基于这个bug的业务对系统造成的影响严不严重然后尽可能的问更多的资料，才能考虑用什么方法。在考虑用什么方法之前应该从管理上要考虑bug的严重性与成本/时间的问题。</p>
+</blockquote>
+<h3 id="1-选择解决问题的方法，无非就两种："><a href="#1-选择解决问题的方法，无非就两种：" class="headerlink" title="1.选择解决问题的方法，无非就两种："></a>1.选择解决问题的方法，无非就两种：</h3><blockquote>
+<ul>
+<li><p>a.解决 </p>
+</li>
+<li><p>b.回退版本+解决，以确保正常业务不出问题</p>
+</li>
+</ul>
+</blockquote>
+<p>如果bug的严重性大，并且不能马上（1-3分钟）解决问题的话，采用a方法；</p>
+<p>如果bug的严重性不大， 采用b方法。</p>
+<h3 id="2-无论选择哪种，都要去解决bug，在解决bug之前，尽量保留现场，有利于快速的去解决问题，具体方法如下-都是在测试环境进行"><a href="#2-无论选择哪种，都要去解决bug，在解决bug之前，尽量保留现场，有利于快速的去解决问题，具体方法如下-都是在测试环境进行" class="headerlink" title="2.无论选择哪种，都要去解决bug，在解决bug之前，尽量保留现场，有利于快速的去解决问题，具体方法如下(都是在测试环境进行):"></a>2.无论选择哪种，都要去解决bug，在解决bug之前，尽量保留现场，有利于快速的去解决问题，具体方法如下(都是在测试环境进行):</h3><p>a.重现。一般来说能重现的问题都不是问题，如果事先已经打印了日志，可以根据日志去重现问题，</p>
+<p>否则可以根据review code+压力测试去重现问题，如果重现出了问题进行c步骤，否则进行b步骤;</p>
+<p>b.加大测试力度或者采取别的测试方法去重现问题</p>
+<p>c.定位和Reduce(逐步收窄范围)，定位可以采取日志跟踪，断点调试，或者软件调式都可以，</p>
+<p>在定位的过程中最逐步的去收窄范围，这样有利于解决快速的定位出问题；</p>
+<p>d.在定位出了问题之后再次考虑bug的严重性与成本/时间的问题，看需不需要去解决。</p>
+<h3 id="3-如果最终能找出问题，需要研究怎样防范相似的-bug。"><a href="#3-如果最终能找出问题，需要研究怎样防范相似的-bug。" class="headerlink" title="3.如果最终能找出问题，需要研究怎样防范相似的 bug。"></a>3.如果最终能找出问题，需要研究怎样防范相似的 bug。</h3><h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4.总结"></a>4.总结</h3><p>一般来说，如果是核心业务，都会打出日志，根据日志都能快速解决问题，否则，只能去重现问题，然后去定位问题，最后solve。</p>
+<hr>
+<p>作者 [soar]<br>2017 年 06月 08日 </p>
+<hr>
+<h4 id="link-amp-more"><a href="#link-amp-more" class="headerlink" title="link &amp; more:"></a>link &amp; more:</h4><p><a href="http://dbaplus.cn/news-21-625-1.html" target="_blank" rel="external">http://dbaplus.cn/news-21-625-1.html</a><br><a href="https://www.zhihu.com/question/43416744" target="_blank" rel="external">https://www.zhihu.com/question/43416744</a></p>
 
-      <h2 class="post-title">
+      
+    </div>
+
+    <div>
+      
         
-            <a class="post-title-link" href="/2016/05/13/cmd markdown/" itemprop="url">
-              
-                <span itemprop="name">cmd markdown</span>
-              
-            </a>
+
+      
+    </div>
+
+    <div>
+      
         
-      </h2>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-05-13T15:56:12+08:00"
-              content="2016-05-13" >
-          05-13
-        </time>
-      </div>
+      
+    </div>
 
-    </header>
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/运维/" rel="tag"># 运维</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/06/07/linux-io/" rel="next" title="linux-io">
+                <i class="fa fa-chevron-left"></i> linux-io
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/06/09/current-case/" rel="prev" title="web高并发案例分析">
+                web高并发案例分析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </article>
 
 
-    
-  </div>
 
-  
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
 
 
           </div>
@@ -320,6 +518,12 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+  </div>
+
 
         </div>
         
@@ -339,8 +543,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.jpg"
@@ -393,6 +606,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#问题：在多线程和高并发环境下，如果有一个平均运行一百万次才出现一次的bug，你如何调试这个bug？"><span class="nav-number">1.</span> <span class="nav-text">问题：在多线程和高并发环境下，如果有一个平均运行一百万次才出现一次的bug，你如何调试这个bug？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-选择解决问题的方法，无非就两种："><span class="nav-number"></span> <span class="nav-text">1.选择解决问题的方法，无非就两种：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-无论选择哪种，都要去解决bug，在解决bug之前，尽量保留现场，有利于快速的去解决问题，具体方法如下-都是在测试环境进行"><span class="nav-number"></span> <span class="nav-text">2.无论选择哪种，都要去解决bug，在解决bug之前，尽量保留现场，有利于快速的去解决问题，具体方法如下(都是在测试环境进行):</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-如果最终能找出问题，需要研究怎样防范相似的-bug。"><span class="nav-number"></span> <span class="nav-text">3.如果最终能找出问题，需要研究怎样防范相似的 bug。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-总结"><span class="nav-number"></span> <span class="nav-text">4.总结</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#link-amp-more"><span class="nav-number">1.</span> <span class="nav-text">link & more:</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -517,6 +746,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
 
   
 
