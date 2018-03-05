@@ -350,7 +350,7 @@
                   <span class="post-meta-item-text">字数统计</span>
                 
                 <span title="字数统计">
-                  15
+                  521
                 </span>
               
 
@@ -366,7 +366,7 @@
                   <span class="post-meta-item-text">阅读时长</span>
                 
                 <span title="阅读时长">
-                  1
+                  2
                 </span>
               
             </div>
@@ -387,446 +387,20 @@
         
           
             <h1 id="2017年腾讯QQ红包"><a href="#2017年腾讯QQ红包" class="headerlink" title="2017年腾讯QQ红包"></a>2017年腾讯QQ红包</h1><hr>
+<h2 id="系统架构和数据流"><a href="#系统架构和数据流" class="headerlink" title="系统架构和数据流"></a>系统架构和数据流</h2><p><img src="/images/tags/架构设计/2017年腾讯QQ红包/架构设计-2017年腾讯QQ红包-red-packet.png" alt="question"><br>以上系统最大优点就应用层操作系统完全和db隔离，数据持久化的步骤：data-&gt;redis-&gt;rabbitmq-&gt;mysql，但是还存在db单点问题，依赖无关系统Kafka影响系统性能。</p>
+<h2 id="系统优化过程"><a href="#系统优化过程" class="headerlink" title="系统优化过程"></a>系统优化过程</h2><p>根据压测报告和日志分析，不断优化性能短板。</p>
+<h3 id="应用内"><a href="#应用内" class="headerlink" title="应用内"></a>应用内</h3><p>1.资源锁的问题<br>2.多线程并发<br>3.去掉重复冗余的代码</p>
+<h3 id="tomcat连接池"><a href="#tomcat连接池" class="headerlink" title="tomcat连接池"></a>tomcat连接池</h3><p>1.加大连接数<br>2.加大排队数(并不会加大TPS)</p>
+<h3 id="http"><a href="#http" class="headerlink" title="http"></a>http</h3><p>1.TCP并发链接(没有及时释放)，CLOSE_WAIT过多。<br>2.加大连接池连接数量</p>
+<h3 id="mysql"><a href="#mysql" class="headerlink" title="mysql"></a>mysql</h3><p>1.优化sql，避免复杂查询<br>2.优化索引,让每条select都走索引<br>3.加大连接池的最大连接数<br>4.尝试测试不同的连接池,选择性能最佳的</p>
+<h3 id="redis"><a href="#redis" class="headerlink" title="redis"></a>redis</h3><p>1.db中的数据load保存为hash（全表保存）<br>2.根据业务优化redis存储结构,减少redis查询次数<br>3.redis cpu为单核，大量查询会成为严重短板,进行分片处理和集群处理<br>4.过期时间不设置,可以测试出用户消耗的最大redis容量</p>
+<h3 id="加快消费者消费速度"><a href="#加快消费者消费速度" class="headerlink" title="加快消费者消费速度"></a>加快消费者消费速度</h3><p>1.增加消费者数量<br>2.增加消费者预读取数据数量<br>3.优化消费逻辑，例如db查询，逻辑判断</p>
+<h3 id="mq"><a href="#mq" class="headerlink" title="mq"></a>mq</h3><p>1.消息体一般为redis key,可以去redis拿取数据,优化消息存储大小<br>2.可以按功能不同,拆分多个队列,加快单逻辑处理速度</p>
+<h3 id="java启动脚本优化"><a href="#java启动脚本优化" class="headerlink" title="java启动脚本优化"></a>java启动脚本优化</h3><p>1.spring boot项目<br>2.优化jvm启动参数</p>
+<h3 id="项目初始化"><a href="#项目初始化" class="headerlink" title="项目初始化"></a>项目初始化</h3><p>1.将数据库数据先load到redis。可以控制速度，百万数据大概5min load完。</p>
+<h3 id="日志优化"><a href="#日志优化" class="headerlink" title="日志优化"></a>日志优化</h3><p>1.log4j2异步写日志文件<br>2.减少日志打印，例如正常请求仅打印入参和出参<br>3.搭建日志系统，自动收集服务器的日志，然后通过kafka发送给elk</p>
 <hr>
 <p>作者 [soar]<br>2018年 03月 03日</p>
-<hr>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/06/设计模式之责任链模式/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="soar">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="三月的雨">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/06/设计模式之责任链模式/" itemprop="url">设计模式之责任链模式</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-06T10:35:21+08:00">
-                2018-01-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计</span>
-                
-                <span title="字数统计">
-                  19
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长</span>
-                
-                <span title="阅读时长">
-                  1
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="设计模式之责任链模式"><a href="#设计模式之责任链模式" class="headerlink" title="设计模式之责任链模式"></a>设计模式之责任链模式</h1><hr>
-<hr>
-<p>作者 [soar]<br>2018年 01月 06日</p>
-<hr>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/04/理财业务剖析/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="soar">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="三月的雨">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/11/04/理财业务剖析/" itemprop="url">理财业务剖析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-04T09:28:56+08:00">
-                2017-11-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计</span>
-                
-                <span title="字数统计">
-                  15
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长</span>
-                
-                <span title="阅读时长">
-                  1
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="理财业务剖析"><a href="#理财业务剖析" class="headerlink" title="理财业务剖析"></a>理财业务剖析</h1><hr>
-<hr>
-<p>作者 [soar]<br>2017年 11月 04日</p>
-<hr>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/03/理财业务设计/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="soar">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="三月的雨">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/11/03/理财业务设计/" itemprop="url">理财业务架构</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-03T09:28:56+08:00">
-                2017-11-03
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计</span>
-                
-                <span title="字数统计">
-                  15
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长</span>
-                
-                <span title="阅读时长">
-                  1
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="理财业务架构"><a href="#理财业务架构" class="headerlink" title="理财业务架构"></a>理财业务架构</h1><hr>
-<hr>
-<p>作者 [soar]<br>2017年 11月 03日</p>
 <hr>
 
           
@@ -1175,152 +749,6 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/02/如何保证开发的质量/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="soar">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="三月的雨">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/02/如何保证开发的质量/" itemprop="url">如何保证开发的质量</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-02T13:23:26+08:00">
-                2017-09-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计</span>
-                
-                <span title="字数统计">
-                  18
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长</span>
-                
-                <span title="阅读时长">
-                  1
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="如何保证开发的质量"><a href="#如何保证开发的质量" class="headerlink" title="如何保证开发的质量"></a>如何保证开发的质量</h1><hr>
-<hr>
-<p>作者 [soar]<br>2017年 09月 02日</p>
-<hr>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/01/如何合理的设计接口/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1384,7 +812,7 @@
                   <span class="post-meta-item-text">字数统计</span>
                 
                 <span title="字数统计">
-                  18
+                  276
                 </span>
               
 
@@ -1421,153 +849,14 @@
         
           
             <h1 id="如何合理的设计接口"><a href="#如何合理的设计接口" class="headerlink" title="如何合理的设计接口"></a>如何合理的设计接口</h1><hr>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>这里主要以信贷上传用户实心信息为例，在编码业务代码时，必须是基于设计思想，考虑可能问题，然后编码不同场景下不同用户操作的测试用例，最后进行断点调试，单元测试，接口测试，以及自动化测试。</p>
+<h3 id="设计思想"><a href="#设计思想" class="headerlink" title="设计思想"></a>设计思想</h3><p>可扩展，复用，解耦，简易性，必要性等。</p>
+<h3 id="考虑问题"><a href="#考虑问题" class="headerlink" title="考虑问题"></a>考虑问题</h3><p>安全性，用户体验，性能等。</p>
+<h3 id="业务场景"><a href="#业务场景" class="headerlink" title="业务场景"></a>业务场景</h3><p>1.正常拍照<br>2.非正常拍照<br>3.通过接口传数据，同2</p>
+<h3 id="用户操作"><a href="#用户操作" class="headerlink" title="用户操作"></a>用户操作</h3><p>1.用户使用自己的身份证(是否在库)<br>2.用户使用别人的身份证(是否在库)<br>3.使用错误的身份证</p>
+<h3 id="业务代码"><a href="#业务代码" class="headerlink" title="业务代码"></a>业务代码</h3><p>1.校验身份证：数据合法性，身份证有效日期，判断该卡是否被使用(二要素鉴权，其实是没必要的);<br>2.提交实名信息：判断身份证是否被使用，人脸二要素识别，实名信息落库。</p>
 <hr>
 <p>作者 [soar]<br>2017年 09月 01日</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/16/rocketmq高性能之道/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="soar">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="三月的雨">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/07/16/rocketmq高性能之道/" itemprop="url">rocketmq高性能之道</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-16T09:28:58+08:00">
-                2017-07-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计</span>
-                
-                <span title="字数统计">
-                  15
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长</span>
-                
-                <span title="阅读时长">
-                  1
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="rocketmq高性能之道"><a href="#rocketmq高性能之道" class="headerlink" title="rocketmq高性能之道"></a>rocketmq高性能之道</h1><hr>
-<hr>
-<p>作者 [soar]<br>2017年 07月 16日</p>
 
           
         
@@ -1674,7 +963,164 @@
                   <span class="post-meta-item-text">字数统计</span>
                 
                 <span title="字数统计">
-                  15
+                  1,053
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  4
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="kafka高性能之道"><a href="#kafka高性能之道" class="headerlink" title="kafka高性能之道"></a>kafka高性能之道</h1><hr>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>想要了解kafka的高性能的知识点，首先必须之道kafka整个处理消息的流程，这里主要以客户端发送消息-&gt;broker-&gt;消息者消费消息来描述。</p>
+<h2 id="生产者发送消息"><a href="#生产者发送消息" class="headerlink" title="生产者发送消息"></a>生产者发送消息</h2><h3 id="并行发送消息Partition"><a href="#并行发送消息Partition" class="headerlink" title="并行发送消息Partition"></a>并行发送消息Partition</h3><p>是Kafka中横向扩展和一切并行化的基础，每个Topic都至少被切分为1个Partition，至于配置多少个Partition，如下分析：<br>服务器配置如下：<br>CPU：8 vCPU， Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz，2 Sockets，4 Cores per socket，1 Thread per core<br>内存：16 GB<br>磁盘：500 GB<br>实验条件：3个Broker，1个Topic，无Replication，异步模式，3个Producer，消息Payload为100字节<br>测试项目：分别测试1到9个Partition时的吞吐量<br>测试结果：不同Partition数量时的集群总吞吐率如下图所示：<br><img src="/images/tags/kafka/kafka-partition_throughput.png" alt="question"></p>
+<h3 id="批处理"><a href="#批处理" class="headerlink" title="批处理"></a>批处理</h3><p>批处理是一种常用的用于提高I/O性能的方式。对Kafka而言，批处理既减少了网络IO传输的次数，又提高了写磁盘的效率。</p>
+<h3 id="数据压缩降低网络负载"><a href="#数据压缩降低网络负载" class="headerlink" title="数据压缩降低网络负载"></a>数据压缩降低网络负载</h3><p>Kafka从0.7开始，即支持将数据压缩后再传输给Broker。除了可以将每条消息单独压缩然后传输外，Kafka还支持在批量发送时，将整个Batch的消息一起压缩后传输。数据压缩的一个基本原理是，重复数据越多压缩效果越好。因此将整个Batch的数据一起压缩能更大幅度减小数据量，从而更大程度提高网络传输效率。<br>Broker接收消息后，并不直接解压缩，而是直接将消息以压缩后的形式持久化到磁盘。Consumer Fetch到数据后再解压缩。因此Kafka的压缩不仅减少了Producer到Broker的网络传输负载，同时也降低了Broker磁盘操作的负载，也降低了Consumer与Broker间的网络传输量，从而极大得提高了传输效率，提高了吞吐量。</p>
+<h3 id="高效的序列化方式"><a href="#高效的序列化方式" class="headerlink" title="高效的序列化方式"></a>高效的序列化方式</h3><p>Kafka消息的Key和Payload（或者说Value）的类型可自定义，只需同时提供相应的序列化器和反序列化器即可。因此用户可以通过使用快速且紧凑的序列化-反序列化方式（如Avro，Protocal Buffer）来减少实际网络传输和磁盘存储的数据规模，从而提高吞吐率。这里要注意，如果使用的序列化方法太慢，即使压缩比非常高，最终的效率也不一定高。</p>
+<h2 id="broker"><a href="#broker" class="headerlink" title="broker"></a>broker</h2><h3 id="PageCache"><a href="#PageCache" class="headerlink" title="PageCache"></a>PageCache</h3><p>Kafka重度依赖底层操作系统提供的PageCache功能。当上层有写操作时，操作系统只是将数据写入PageCache，同时标记Page属性为Dirty。当读操作发生时，先从PageCache中查找，如果发生缺页才进行磁盘调度，最终返回需要的数据。实际上PageCache是把尽可能多的空闲内存都当做了磁盘缓存来使用。同时如果有其他进程申请内存，回收PageCache的代价又很小，所以现代的OS都支持PageCache。PageCache还只是第一步，Kafka为了进一步的优化性能还采用了Sendfile技术，也就是接下来说明的Zero Copy。</p>
+<h4 id="PageCache优点"><a href="#PageCache优点" class="headerlink" title="PageCache优点"></a>PageCache优点</h4><p>所有的In-Process Cache在OS中都有一份同样的PageCache。所以通过将缓存只放在PageCache，可以至少让可用缓存空间翻倍。</p>
+<h4 id="JVM-GC缺点"><a href="#JVM-GC缺点" class="headerlink" title="JVM GC缺点"></a>JVM GC缺点</h4><p>使用PageCache功能同时可以避免在JVM内部缓存数据，如果在Heap内管理缓存，JVM的GC线程会频繁扫描Heap空间，带来不必要的开销。如果Heap过大，执行一次Full GC对系统的可用性来说将是极大的挑战。</p>
+<h2 id="消费者消费下消息"><a href="#消费者消费下消息" class="headerlink" title="消费者消费下消息"></a>消费者消费下消息</h2><p>在这里消费者有两种消费消息的模式，一种是轮训poll，另一种就是订阅。无论是哪种，broker都要进行数据的准备。</p>
+<h3 id="PageCache-1"><a href="#PageCache-1" class="headerlink" title="PageCache"></a>PageCache</h3><p>详见broker-&gt;PageCache描述</p>
+<h3 id="从磁盘读取数据方式（Sequence-I-O）"><a href="#从磁盘读取数据方式（Sequence-I-O）" class="headerlink" title="从磁盘读取数据方式（Sequence I/O）"></a>从磁盘读取数据方式（Sequence I/O）</h3><p>Sequence I/O: 600MB/s<br>Random I/O: 100KB/s</p>
+<h3 id="Zero-Copy"><a href="#Zero-Copy" class="headerlink" title="Zero Copy"></a>Zero Copy</h3><p>详解网址：<a href="http://ysjun.github.io/2016/05/14/zero-copy/，" target="_blank" rel="external">http://ysjun.github.io/2016/05/14/zero-copy/，</a><br>优点：sendfile系统调用实现零拷贝，减少上下文切换。</p>
+<hr>
+<p>作者 [soar]<br>2017年 06月 15日</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/09/15/mysql-field-newline/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="soar">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="三月的雨">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/09/15/mysql-field-newline/" itemprop="url">mysql字段带有回车换行符号</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-09-15T11:28:28+08:00">
+                2016-09-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  159
                 </span>
               
 
@@ -1710,9 +1156,694 @@
       
         
           
-            <h1 id="kafka高性能之道"><a href="#kafka高性能之道" class="headerlink" title="kafka高性能之道"></a>kafka高性能之道</h1><hr>
+            <h1 id="mysql字段带有回车换行符号引发数据为空的问题"><a href="#mysql字段带有回车换行符号引发数据为空的问题" class="headerlink" title="mysql字段带有回车换行符号引发数据为空的问题"></a>mysql字段带有回车换行符号引发数据为空的问题</h1><hr>
+<h2 id="发现问题"><a href="#发现问题" class="headerlink" title="发现问题"></a>发现问题</h2><p>在一次实践中发现，明明看到数据库表中某个字段有数据，但是通过程序去查，没有查出来。</p>
+<h2 id="分析问题"><a href="#分析问题" class="headerlink" title="分析问题"></a>分析问题</h2><p>出现这个问题之后，然后去点击这个字段的数据，发现数据为空，最后才发现了问题所在，因为这个数据里面携带回车换行符号岛导致获取的数据为空。</p>
+<h2 id="解决问题"><a href="#解决问题" class="headerlink" title="解决问题"></a>解决问题</h2><p>删除该字段的回车换行符即可解决这个问题。</p>
 <hr>
-<p>作者 [soar]<br>2017年 06月 15日</p>
+<p>作者 [soar]<br>2016年 09月 15日</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/06/20/java-utils/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="soar">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="三月的雨">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/06/20/java-utils/" itemprop="url">java工具类</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-06-20T00:18:38+08:00">
+                2016-06-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  129
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  1
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="GitHub上前16名的Java工具类"><a href="#GitHub上前16名的Java工具类" class="headerlink" title="GitHub上前16名的Java工具类"></a>GitHub上前16名的Java工具类</h1><hr>
+<blockquote>
+<p>在Java中，工具类就是一个定义了一组执行常用功能方法的类。programcreek统计了最常用的Java工具类及其常用方法。数据来自GitHub随机选择的50,000个开源Java项目。</p>
+</blockquote>
+<p>下面是前16位的最受欢迎的工具类和方法，收藏一下以便在需要的时候不需要自己重复发明轮子。</p>
+<p>方法的名称通常就表示其功能。</p>
+<p><img src="/images/tags/java/utils/java-utils-01.png" alt="java-utils"><br><img src="/images/tags/java/utils/java-utils-02.png" alt="java-utils"><br><img src="/images/tags/java/utils/java-utils-03.png" alt="java-utils"><br><img src="/images/tags/java/utils/java-utils-04.png" alt="java-utils"><br><img src="/images/tags/java/utils/java-utils-05.png" alt="java-utils"><br><img src="/images/tags/java/utils/java-utils-06.png" alt="java-utils"></p>
+<hr>
+<p>作者 [soar]<br>2016年 06月 20日</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/06/09/current-case/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="soar">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="三月的雨">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/06/09/current-case/" itemprop="url">web高并发案例分析</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-06-09T21:19:59+08:00">
+                2016-06-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  2,641
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  9
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<blockquote>
+<p> 一般来说web高并发需要解决的问题如下：</p>
+<p>1.应用服务器的高并发</p>
+<p>2.数据库的高并发</p>
+<ul>
+<li>持久化的数据mysql或者oracle（关系型）</li>
+<li>缓存型数据库redis或者memcache（非关系型）</li>
+</ul>
+</blockquote>
+<h2 id="一、应用服务器的高并发"><a href="#一、应用服务器的高并发" class="headerlink" title="一、应用服务器的高并发"></a>一、应用服务器的高并发</h2><p>一般应用服务器的架构都是对台tomcat，加上一台nginx反向代理服务器组成一个小型集群，这样虽然可以承受的住一般的高并发访问，但是对于高并发的话，就有些吃紧。可能大家会觉得tomcat可以不断水平扩容，这样就可以承受的住高并发访问，但是要知道一点，一台nginx服务不管怎么去优化（提升服务器的硬件配置），她的并发数终究是有限的，当达到十万级时，一台代理服务器时扛不住这么大的并发数的，因为需要多台nginx组成一个集群，自己可以搭建个均衡负载器，但是工作量很大，对于没有这方面经验来说，可以使用腾讯云的均衡负载器。每次需要扩容时，可以看看系统还能不能继续优化，比如看看：tomcat和jvm参数设置是不是最优等。</p>
+<h2 id="二、对于数据库的并发，一般包括持久化数据库和缓存数据的并发"><a href="#二、对于数据库的并发，一般包括持久化数据库和缓存数据的并发" class="headerlink" title="二、对于数据库的并发，一般包括持久化数据库和缓存数据的并发"></a>二、对于数据库的并发，一般包括持久化数据库和缓存数据的并发</h2><h3 id="1-对于持久化的数据库，对于sql，能够适当增加索引，sql技巧等来优化数据库，如果不行，再采用垂直和水平分表，垂直和水平分库，分区以及读写分离等操作。"><a href="#1-对于持久化的数据库，对于sql，能够适当增加索引，sql技巧等来优化数据库，如果不行，再采用垂直和水平分表，垂直和水平分库，分区以及读写分离等操作。" class="headerlink" title="1. 对于持久化的数据库，对于sql，能够适当增加索引，sql技巧等来优化数据库，如果不行，再采用垂直和水平分表，垂直和水平分库，分区以及读写分离等操作。"></a>1. 对于持久化的数据库，对于sql，能够适当增加索引，sql技巧等来优化数据库，如果不行，再采用垂直和水平分表，垂直和水平分库，分区以及读写分离等操作。</h3><p>1.1 sql技巧：一般业务下都会有按时间降序的要求，此时可以根据主键id进行降序排序，一样能达到业务要去，但是这种方法要快速很多。</p>
+<p>1.2 垂直分表：把不常用或业务逻辑不紧密或存储内容比较多的字段分到新的表中可使表存储更多数据。另外垂直分割可以使得数据行变小，一个数据页就能存放更多的数据，在查询时就会减少I/O次数和增加缓存的命中率。其缺点是需要管理冗余列，查询所有数据需要join操作。</p>
+<p>1.3 水平分表：一般来说，水平分表更多的是采用某种策略，比如存放游戏日志，这里先不讨论用mongodb或者habse来存储，我们可以按天，星期或者月来分表，至于采用哪种根据表的产生数据的速度，另外，我们再根据日期进行分表的同时，还可以根据用户的唯一性标识进行分表，比如：用身份标识（qq）,我们可以根据qq的后两位根据分表，这样最多是100张表，为了限制单张表的数据无限增长，可以做个任务定时器去定时清楚表的数据，最好保持在10万以下；冷热数据存储也是水平分表的另一种方法。</p>
+<p>1.4 垂直分库：垂直分库在“微服务”盛行的今天已经非常普及了。基本的思路就是按照业务模块来划分出不同的数据库，而不是像早期一样将所有的数据表都放到同一个数据库中。</p>
+<p>比如：对于游戏日志放到一个数据库，在这里就要考虑到在高并发场景下，垂直分库一定程度上能够突破IO、连接数及单机硬件资源的瓶颈，是大型分布式系统中优化数据库架构的重要手段。但是也会遇到很多问题，例如：跨库join，分布式事务等。</p>
+<p>1.5 水平分库: 与上面讲到的水平分表的思想相同，唯一不同的就是将这些拆分出来的表保存在不同的数据中。这也是很多大型互联网公司所选择的做法。某种意义上来讲，有些系统中使用的”冷热数据分离”（将一些使用较少的历史数据迁移到其他的数据库中。而在业务功能上，通常默认只提供热点数据的查询），也是类似的实践。在高并发和海量数据的场景下，分库能够有效缓解单机和单库的性能瓶颈和压力，突破IO、连接数、硬件资源的瓶颈。当然，投入的硬件成本也会更高。同时，这也会带来一些复杂的技术问题和挑战（例如：跨分片的复杂查询，跨分片事务等）</p>
+<p>1.6 分区：</p>
+<p>1.7 读写分离： </p>
+<h3 id="2-缓存数据库redis"><a href="#2-缓存数据库redis" class="headerlink" title="2.缓存数据库redis"></a>2.缓存数据库redis</h3><h4 id="单点："><a href="#单点：" class="headerlink" title="单点："></a>单点：</h4><p>一般来说系统初期的话，redis都是单点，单点的坏处就是并发数有点，可用性差，可扩性差。在改变架构之前，最好看看原先redis性能能不能优化，一般优化包括配置参数，内存，命中率，对于内存，如果对key能设置过期时间过好设置过期时间并且采用合适的数据淘汰算法，在这里切记对于可能无限增长的key一定注意，<br>比如：time key,每隔10秒设置一个key缓存，这样的话，一年下来就可能有50多万的key,想想就可怕，这样的话可能就要换个数据接口进行存储，或者加上过期时间，再或者换个其他方法，所以在设置key最好想清楚用什么数据接构存储，能不能加上过期时间，最后考虑全局使用合适的数据淘汰算法。</p>
+<h4 id="分布式："><a href="#分布式：" class="headerlink" title="分布式："></a>分布式：</h4><p>随着系统的并发数越来越大，可以扩展redis成分布式redis，在这里除了要清楚运维的操作方面：a.增加和移除主从节点 b.重新分片在这里移除主节点需要注意两点：a.先移除主节点的slot b.如果主节点有从节点，会从主节点下的所有的从节点进行选举一个成为主节点，所以一定要确保所有的从节点的本地dump数据文件不能为空；还需要考虑分布式锁和分布式事物。</p>
+<p>分布式锁：</p>
+<p>分布式事务：</p>
+<h2 id="三、小结"><a href="#三、小结" class="headerlink" title="三、小结"></a>三、小结</h2><p>1.对于应用服务器的高并发： 采用多nginx+多tomcat集群模式，这里还可以根据服务的划分（soa），把复杂的系统划分为一个个子服务，服务之间访问可以采用http+json，也可以采用RPC，一般来说RPC适合内网通信，http+json适合外网通信，当然RPC各个方面的性能都要比http要，其次分布式的节点也可以作为一个集群来部署，这样就能非常高的并发数。</p>
+<p>2.数据库的高并发：前面讲了很常见的mysql和redis，在大型网站中数据量是非常大的，对于某些业务每天可能都会生成十万级，百万级，甚至千万级的数据的来书，mysql无疑是够呛的，这时可以考虑使用mongodb或者hbase.</p>
+<h2 id="四、案例分析"><a href="#四、案例分析" class="headerlink" title="四、案例分析"></a>四、案例分析</h2><p>1.文章阅读数增加</p>
+<p>一般会用到redis, mysql, 异步消息队列系统（redis：优点：低延迟，缺点：no have ack），具体操作：首先对redis的数据进行加jedisClient.hincrBy(RDU.READ_COUNT, id, 1)，然后返回数据，之后的数据持久化操作就交给redis异步消息系统，这里需要考虑三个fail点：a.redis fail直接返回错误提示 b.请求发送失败 c.异步消息系统处理持久化失败对于第一个我们并不care；第二个请求发送失败（失败点：网络连接失败），这里我们没必要关注这种概率极低的现象，因为你要考虑要技术实现的成本与时间的问题，并且每次发送个异步消息的数据都是最新点赞数，就算出现问题只要再次持久化到数据库就行；第三个异步消息处理失败我们可以做好系统的监控与预警，及时处理失败的业务。</p>
+<p>扩展：<br>单点的redis并发数有限，可用性差，可扩性差，可以搭建redis集群来解决这个问题，对于一些可能重要的业务数据需要ack来说，可以采用阿里的racketmq，对于一些不重要的业务数据，丢失也没什么关系，比如：日志处理，可以采用kafka，她无疑是mq性能中的巨无霸。</p>
+<p>2.文章搜索</p>
+<p>这里不讨论如何实现文章的搜索，文章搜索的实现会在另一篇文章中进行总结分享。一般除了要返回查询的文章的数据，还需要对用户行为的日志进行记录，用于统计和分析用户的行为，方便平台能够能好的迎合用户的需求，这里的日志输入采用了slf4j+logback，日志收集采用了ftp，日志存储采用了mongodb，日志统计与分析可用spring tsak定时任务定统计，展现给分析人员进行分析。这里的除了日志输出在本系统，其他都可以交给日志分析系统，也就是统计系统来做，可以提高单个系统的并发和降低系统的耦合度，日志分析系统主要采用了slf4j+logback+ftp+mongodb,当然还可以采用性能更优的slf4j+logback+kafka+mongodb+Elasticsearch+kibana，其中Elasticsearch是个开源分布式搜索引擎，它的特点有：分布式，零配置，自动发现，索引自动分片，索引副本机制，restful风格接口，多数据源，自动搜索负载等，kibana也是一个开源和免费的工具，他Kibana可以为ElasticSearch 提供的日志分析友好的 Web 界面，可以帮助您汇总、分析和搜索重要数据日志。</p>
+<h2 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a>五、总结</h2><p>对于高并发的Web系统，一般都会用到集群，分布式，分布式缓存，分布式消息队列，分布式日志收集等技术，这些技术不仅能解决高并发的问题，还可以构建高并发，高流量，高性能，高可用以及可扩展的大型web系统。</p>
+<hr>
+<p>作者 [soar]<br>2016年 06月 09日</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/06/08/solve-question/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="soar">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="三月的雨">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/06/08/solve-question/" itemprop="url">如何快速的解决线上的问题</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-06-08T18:51:14+08:00">
+                2016-06-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  565
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  2
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<h4 id="问题：在多线程和高并发环境下，如果有一个平均运行一百万次才出现一次的bug，你如何调试这个bug？"><a href="#问题：在多线程和高并发环境下，如果有一个平均运行一百万次才出现一次的bug，你如何调试这个bug？" class="headerlink" title="问题：在多线程和高并发环境下，如果有一个平均运行一百万次才出现一次的bug，你如何调试这个bug？"></a>问题：在多线程和高并发环境下，如果有一个平均运行一百万次才出现一次的bug，你如何调试这个bug？</h4><blockquote>
+<p>先问清楚bug是属于哪一类，是崩溃？还是数据不一致？以及对基于这个bug的业务对系统造成的影响严不严重然后尽可能的问更多的资料，才能考虑用什么方法。在考虑用什么方法之前应该从管理上要考虑bug的严重性与成本/时间的问题。</p>
+</blockquote>
+<h3 id="1-选择解决问题的方法，无非就两种："><a href="#1-选择解决问题的方法，无非就两种：" class="headerlink" title="1.选择解决问题的方法，无非就两种："></a>1.选择解决问题的方法，无非就两种：</h3><blockquote>
+<ul>
+<li><p>a.解决 </p>
+</li>
+<li><p>b.回退版本+解决，以确保正常业务不出问题</p>
+</li>
+</ul>
+</blockquote>
+<p>如果bug的严重性大，并且不能马上（1-3分钟）解决问题的话，采用a方法；</p>
+<p>如果bug的严重性不大， 采用b方法。</p>
+<h3 id="2-无论选择哪种，都要去解决bug，在解决bug之前，尽量保留现场，有利于快速的去解决问题，具体方法如下-都是在测试环境进行"><a href="#2-无论选择哪种，都要去解决bug，在解决bug之前，尽量保留现场，有利于快速的去解决问题，具体方法如下-都是在测试环境进行" class="headerlink" title="2.无论选择哪种，都要去解决bug，在解决bug之前，尽量保留现场，有利于快速的去解决问题，具体方法如下(都是在测试环境进行):"></a>2.无论选择哪种，都要去解决bug，在解决bug之前，尽量保留现场，有利于快速的去解决问题，具体方法如下(都是在测试环境进行):</h3><p>a.重现。一般来说能重现的问题都不是问题，如果事先已经打印了日志，可以根据日志去重现问题，</p>
+<p>否则可以根据review code+压力测试去重现问题，如果重现出了问题进行c步骤，否则进行b步骤;</p>
+<p>b.加大测试力度或者采取别的测试方法去重现问题</p>
+<p>c.定位和Reduce(逐步收窄范围)，定位可以采取日志跟踪，断点调试，或者软件调式都可以，</p>
+<p>在定位的过程中最逐步的去收窄范围，这样有利于解决快速的定位出问题；</p>
+<p>d.在定位出了问题之后再次考虑bug的严重性与成本/时间的问题，看需不需要去解决。</p>
+<h3 id="3-如果最终能找出问题，需要研究怎样防范相似的-bug。"><a href="#3-如果最终能找出问题，需要研究怎样防范相似的-bug。" class="headerlink" title="3.如果最终能找出问题，需要研究怎样防范相似的 bug。"></a>3.如果最终能找出问题，需要研究怎样防范相似的 bug。</h3><h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4.总结"></a>4.总结</h3><p>一般来说，如果是核心业务，都会打出日志，根据日志都能快速解决问题，否则，只能去重现问题，然后去定位问题，最后solve。</p>
+<hr>
+<p>作者 [soar]<br>2016年 06月 08日</p>
+<hr>
+<h4 id="link-amp-more"><a href="#link-amp-more" class="headerlink" title="link &amp; more:"></a>link &amp; more:</h4><p><a href="http://dbaplus.cn/news-21-625-1.html" target="_blank" rel="external">http://dbaplus.cn/news-21-625-1.html</a><br><a href="https://www.zhihu.com/question/43416744" target="_blank" rel="external">https://www.zhihu.com/question/43416744</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/06/07/linux-io/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="soar">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="三月的雨">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/06/07/linux-io/" itemprop="url">linux-io</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-06-07T21:08:59+08:00">
+                2016-06-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  1,835
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  7
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="是时候表演真正的技术了-linux-IO"><a href="#是时候表演真正的技术了-linux-IO" class="headerlink" title="是时候表演真正的技术了-linux IO"></a>是时候表演真正的技术了-linux IO</h1><hr>
+<p>本文讨论的背景是Linux环境下的Network IO。<br>本文最重要的参考文献是Richard Stevens的“UNIX® Network Programming Volume 1, Third Edition: The Sockets Networking ”，6.2节“I/O Models”.</p>
+<p>Stevens在文章中一共比较了五种IO Model：</p>
+<blockquote>
+<ul>
+<li>blocking IO</li>
+<li>nonblocking IO</li>
+<li>IO multiplexing</li>
+<li>signal driven IO</li>
+<li>asynchronous IO</li>
+</ul>
+</blockquote>
+<p>由于signal driven IO在实际中并不常用，所我这只提及剩下的四种IO Model。<br>再说一下IO发生时涉及的对象和步骤。<br>对于一个network IO (这里我们以read举例)，它会涉及到两个系统对象，一个是调用这个IO的process (or thread)，另一个就是系统内核(kernel)。当一个read操作发生时，它会经历两个阶段：</p>
+<blockquote>
+<ul>
+<li>等待数据准备 (Waiting for the data to be ready)</li>
+<li>将数据从内核拷贝到进程中 (Copying the data from the kernel to the process)</li>
+</ul>
+</blockquote>
+<p>记住这两点很重要，因为这些IO Model的区别就是在两个阶段上各有不同的情况。</p>
+<h2 id="Blocking-IO"><a href="#Blocking-IO" class="headerlink" title="Blocking IO"></a>Blocking IO</h2><p>在linux中，默认情况下所有的socket都是blocking，一个典型的读操作流程大概是这样：</p>
+<p><img src="/images/tags/linux/io/bio.png" alt="Blocking IO"></p>
+<p>当用户进程调用了recvfrom这个系统调用，kernel就开始了IO的第一个阶段：准备数据。对于network io来说，很多时候数据在一开始还没有到达（比如，还没有收到一个完整的UDP包），这个时候kernel就要等待足够的数据到来。而在用户进程这边，整个进程会被阻塞。当kernel一直等到数据准备好了，它就会将数据从kernel中拷贝到用户内存，然后kernel返回结果，用户进程才解除block的状态，重新运行起来。<br>所以，blocking IO的特点就是在IO执行的两个阶段都被block了。</p>
+<h2 id="Non-Blocking-IO"><a href="#Non-Blocking-IO" class="headerlink" title="Non-Blocking IO"></a>Non-Blocking IO</h2><p>linux下，可以通过设置socket使其变为non-blocking。当对一个non-blockingsocket执行读操作时，<br>流程是这个样子：</p>
+<p><img src="/images/tags/linux/io/nio.png" alt="Non-Blocking IO"></p>
+<p>从图中可以看出，当用户进程发出read操作时，如果kernel中的数据还没有准备好，那么它并不会block用户进程，而是立刻返回一个error.从用户进程角度讲，它发起一个read操作后，并不需要等待，而是马上就得到了一个结果。用户进程判断结果是一个error时，它就知道数据还没有准备好，于是它可以再次发送read操作。一旦kernel中的数据准备好了，并且又再次收到了用户进程的systemcall，那么它马上就将数据拷贝到了用户内存，然后返回。所以，用户进程其实是需要不断的主动询问kernel数据好了没有。</p>
+<h2 id="IO-Multiplexing"><a href="#IO-Multiplexing" class="headerlink" title="IO Multiplexing"></a>IO Multiplexing</h2><p>IO multiplexing这个词可能有点陌生，但是如果我说select，epoll，大概就都能明白了。有些地方也称这种IO方式为event drivenIO。我们都知道，select/epoll的好处就在于单个process就可以同时处理多个网络连接的IO。它的基本原理就是select/epoll这个function会不断的轮询所负责的所有socket，当某个socket有数据到达了，就通知用户进程。它的流程如图：</p>
+<p><img src="/images/tags/linux/io/iom.png" alt="IO Multiplexing"></p>
+<p>当用户进程调用了select，那么整个进程会被block，而同时，kernel会“监视”所有select负责的socket，当任何一个socket中的数据准备好了，select就会返回。这个时候用户进程再调用read操作，将数据从kernel拷贝到用户进程。这个图和blockingIO的图其实并没有太大的不同，事实上，还更差一些。因为这里需要使用两个system call (select 和 recvfrom)，而blockingIO只调用了一个systemcall(recvfrom)。但是，用select的优势在于它可以同时处理多个connection。（多说一句。所以，如果处理的连接数不是很高的话，使用select/epoll的web server不一定比使用multi-threading + blockin IO的webserver性能更好，可能延迟还更大。select/epoll的优势并不是对于单个连接能处理得更快，而是在于能处理更多的连接。）</p>
+<blockquote>
+<p>在IO multiplexing Model中，实际中，对于每一个socket，一般都设置成为non-blocking，但是，如上图所示，整个用户的process其实是一直被block的。只不过process是被select这个函数block，而不是被socket IO给block。</p>
+</blockquote>
+<h2 id="Asynchronous-I-O"><a href="#Asynchronous-I-O" class="headerlink" title="Asynchronous I/O"></a>Asynchronous I/O</h2><p>linux下的asynchronous IO其实用得很少。先看一下它的流程：</p>
+<p>用户进程发起read操作之后，立刻就可以开始去做其它的事。而另一方面，从kernel的角度，当它受到一个asynchronous read之后，首先它会立刻返回，所以不会对用户进程产生任何block。然后，kernel会等待数据准备完成，然后将数据拷贝到用户内存，当这一切都完成之后，kernel会给用户进程发送一个signal，告诉它read操作完成了。</p>
+<p><img src="/images/tags/linux/io/aio.png" alt="Asynchronous I/O"></p>
+<p>到目前为止，已经将四个IO Model都介绍完了。现在回过头来回答最初的那几个问题：blocking和non-blocking的区别在哪，synchronous IO和asynchronous IO的区别在哪。</p>
+<h3 id="1-blocking-vs-non-blocking"><a href="#1-blocking-vs-non-blocking" class="headerlink" title="1. blocking vs non-blocking"></a>1. blocking vs non-blocking</h3><p>前面的介绍中其实已经很明确的说明了这两者的区别。调用blocking IO会一直block住对应的进程直到操作完成，而non-blocking IO在kernel还准备数据的情况下会立刻返回。</p>
+<p>###2. synchronous IO vs asynchronous IO</p>
+<p>在讲她们之间的区别之前，需要先给出两者的定义。Stevens给出的定义（其实是POSIX的定义）是这样子的：</p>
+<blockquote>
+<p>A synchronous I/O operation causes the requesting process to be blocked until that I/O operation completes;<br>An asynchronous I/O operation does not cause the requesting process to be blocked; </p>
+</blockquote>
+<p>两者的区别就在于synchronous IO做”IO operation”的时候会将process阻塞。按照这个定义，之前所述的blocking IO，non-blocking IO，IO multiplexing都属于synchronous IO。可能有人会说，non-blocking IO并没有被block啊。这里有个非常“狡猾”的地方，定义中所指的”IO operation”是指真实的IO操作，就是例子中的recvfrom这个system call。non-blocking IO在执行recvfrom这个system call的时候，如果kernel的数据没有准备好，这时候不会block进程。但是，当kernel中数据准备好的时候，recvfrom会将数据从kernel拷贝到用户内存中，这个时候进程是被block了，在这段时间内，进程是被block的。而asynchronous IO则不一样，当进程发起IO 操作之后，就直接返回再也不理睬了，直到kernel发送一个信号，告诉进程说IO完成。在这整个过程中，进程完全没有被block。</p>
+<p>各个IO Model的比较如图所示：<br><img src="/images/tags/linux/io/io.png" alt="I/O"> </p>
+<p>经过上面的介绍，会发现non-blocking IO和asynchronous IO的区别还是很明显的。在non-blocking IO中，虽然进程大部分时间都不会被block，但是它仍然要求进程去主动的check，并且当数据准备完成以后，也需要进程主动的再次调用recvfrom来将数据拷贝到用户内存。而asynchronous IO则完全不同。它就像是用户进程将整个IO操作交给了他人（kernel）完成，然后他人做完后发信号通知。在此期间，用户进程不需要去检查IO操作的状态，也不需要主动的去拷贝数据。</p>
+<hr>
+<p>作者 [soar]<br>2016年 06月 07日</p>
 
           
         
@@ -1796,7 +1927,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1809,7 +1940,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

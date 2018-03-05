@@ -90,17 +90,19 @@
 
 
 
-<meta name="description" content="kafka高性能之道  作者 [soar]2017年 06月 15日">
+<meta name="description" content="kafka高性能之道 背景想要了解kafka的高性能的知识点，首先必须之道kafka整个处理消息的流程，这里主要以客户端发送消息-&amp;gt;broker-&amp;gt;消息者消费消息来描述。 生产者发送消息并行发送消息Partition是Kafka中横向扩展和一切并行化的基础，每个Topic都至少被切分为1个Partition，至于配置多少个Partition，如下分析：服务器配置如下：CPU：8 vCP">
 <meta name="keywords" content="kafka">
 <meta property="og:type" content="article">
 <meta property="og:title" content="kafka高性能之道">
 <meta property="og:url" content="http://yoursite.com/2017/06/15/kafka高性能之道/index.html">
 <meta property="og:site_name" content="三月的雨">
-<meta property="og:description" content="kafka高性能之道  作者 [soar]2017年 06月 15日">
-<meta property="og:updated_time" content="2018-03-03T14:45:34.101Z">
+<meta property="og:description" content="kafka高性能之道 背景想要了解kafka的高性能的知识点，首先必须之道kafka整个处理消息的流程，这里主要以客户端发送消息-&amp;gt;broker-&amp;gt;消息者消费消息来描述。 生产者发送消息并行发送消息Partition是Kafka中横向扩展和一切并行化的基础，每个Topic都至少被切分为1个Partition，至于配置多少个Partition，如下分析：服务器配置如下：CPU：8 vCP">
+<meta property="og:image" content="http://yoursite.com/images/tags/kafka/kafka-partition_throughput.png">
+<meta property="og:updated_time" content="2018-03-05T13:08:21.533Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="kafka高性能之道">
-<meta name="twitter:description" content="kafka高性能之道  作者 [soar]2017年 06月 15日">
+<meta name="twitter:description" content="kafka高性能之道 背景想要了解kafka的高性能的知识点，首先必须之道kafka整个处理消息的流程，这里主要以客户端发送消息-&amp;gt;broker-&amp;gt;消息者消费消息来描述。 生产者发送消息并行发送消息Partition是Kafka中横向扩展和一切并行化的基础，每个Topic都至少被切分为1个Partition，至于配置多少个Partition，如下分析：服务器配置如下：CPU：8 vCP">
+<meta name="twitter:image" content="http://yoursite.com/images/tags/kafka/kafka-partition_throughput.png">
 
 
 
@@ -358,7 +360,7 @@
                   <span class="post-meta-item-text">字数统计</span>
                 
                 <span title="字数统计">
-                  15
+                  1,053
                 </span>
               
 
@@ -374,7 +376,7 @@
                   <span class="post-meta-item-text">阅读时长</span>
                 
                 <span title="阅读时长">
-                  1
+                  4
                 </span>
               
             </div>
@@ -393,6 +395,18 @@
 
       
         <h1 id="kafka高性能之道"><a href="#kafka高性能之道" class="headerlink" title="kafka高性能之道"></a>kafka高性能之道</h1><hr>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>想要了解kafka的高性能的知识点，首先必须之道kafka整个处理消息的流程，这里主要以客户端发送消息-&gt;broker-&gt;消息者消费消息来描述。</p>
+<h2 id="生产者发送消息"><a href="#生产者发送消息" class="headerlink" title="生产者发送消息"></a>生产者发送消息</h2><h3 id="并行发送消息Partition"><a href="#并行发送消息Partition" class="headerlink" title="并行发送消息Partition"></a>并行发送消息Partition</h3><p>是Kafka中横向扩展和一切并行化的基础，每个Topic都至少被切分为1个Partition，至于配置多少个Partition，如下分析：<br>服务器配置如下：<br>CPU：8 vCPU， Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz，2 Sockets，4 Cores per socket，1 Thread per core<br>内存：16 GB<br>磁盘：500 GB<br>实验条件：3个Broker，1个Topic，无Replication，异步模式，3个Producer，消息Payload为100字节<br>测试项目：分别测试1到9个Partition时的吞吐量<br>测试结果：不同Partition数量时的集群总吞吐率如下图所示：<br><img src="/images/tags/kafka/kafka-partition_throughput.png" alt="question"></p>
+<h3 id="批处理"><a href="#批处理" class="headerlink" title="批处理"></a>批处理</h3><p>批处理是一种常用的用于提高I/O性能的方式。对Kafka而言，批处理既减少了网络IO传输的次数，又提高了写磁盘的效率。</p>
+<h3 id="数据压缩降低网络负载"><a href="#数据压缩降低网络负载" class="headerlink" title="数据压缩降低网络负载"></a>数据压缩降低网络负载</h3><p>Kafka从0.7开始，即支持将数据压缩后再传输给Broker。除了可以将每条消息单独压缩然后传输外，Kafka还支持在批量发送时，将整个Batch的消息一起压缩后传输。数据压缩的一个基本原理是，重复数据越多压缩效果越好。因此将整个Batch的数据一起压缩能更大幅度减小数据量，从而更大程度提高网络传输效率。<br>Broker接收消息后，并不直接解压缩，而是直接将消息以压缩后的形式持久化到磁盘。Consumer Fetch到数据后再解压缩。因此Kafka的压缩不仅减少了Producer到Broker的网络传输负载，同时也降低了Broker磁盘操作的负载，也降低了Consumer与Broker间的网络传输量，从而极大得提高了传输效率，提高了吞吐量。</p>
+<h3 id="高效的序列化方式"><a href="#高效的序列化方式" class="headerlink" title="高效的序列化方式"></a>高效的序列化方式</h3><p>Kafka消息的Key和Payload（或者说Value）的类型可自定义，只需同时提供相应的序列化器和反序列化器即可。因此用户可以通过使用快速且紧凑的序列化-反序列化方式（如Avro，Protocal Buffer）来减少实际网络传输和磁盘存储的数据规模，从而提高吞吐率。这里要注意，如果使用的序列化方法太慢，即使压缩比非常高，最终的效率也不一定高。</p>
+<h2 id="broker"><a href="#broker" class="headerlink" title="broker"></a>broker</h2><h3 id="PageCache"><a href="#PageCache" class="headerlink" title="PageCache"></a>PageCache</h3><p>Kafka重度依赖底层操作系统提供的PageCache功能。当上层有写操作时，操作系统只是将数据写入PageCache，同时标记Page属性为Dirty。当读操作发生时，先从PageCache中查找，如果发生缺页才进行磁盘调度，最终返回需要的数据。实际上PageCache是把尽可能多的空闲内存都当做了磁盘缓存来使用。同时如果有其他进程申请内存，回收PageCache的代价又很小，所以现代的OS都支持PageCache。PageCache还只是第一步，Kafka为了进一步的优化性能还采用了Sendfile技术，也就是接下来说明的Zero Copy。</p>
+<h4 id="PageCache优点"><a href="#PageCache优点" class="headerlink" title="PageCache优点"></a>PageCache优点</h4><p>所有的In-Process Cache在OS中都有一份同样的PageCache。所以通过将缓存只放在PageCache，可以至少让可用缓存空间翻倍。</p>
+<h4 id="JVM-GC缺点"><a href="#JVM-GC缺点" class="headerlink" title="JVM GC缺点"></a>JVM GC缺点</h4><p>使用PageCache功能同时可以避免在JVM内部缓存数据，如果在Heap内管理缓存，JVM的GC线程会频繁扫描Heap空间，带来不必要的开销。如果Heap过大，执行一次Full GC对系统的可用性来说将是极大的挑战。</p>
+<h2 id="消费者消费下消息"><a href="#消费者消费下消息" class="headerlink" title="消费者消费下消息"></a>消费者消费下消息</h2><p>在这里消费者有两种消费消息的模式，一种是轮训poll，另一种就是订阅。无论是哪种，broker都要进行数据的准备。</p>
+<h3 id="PageCache-1"><a href="#PageCache-1" class="headerlink" title="PageCache"></a>PageCache</h3><p>详见broker-&gt;PageCache描述</p>
+<h3 id="从磁盘读取数据方式（Sequence-I-O）"><a href="#从磁盘读取数据方式（Sequence-I-O）" class="headerlink" title="从磁盘读取数据方式（Sequence I/O）"></a>从磁盘读取数据方式（Sequence I/O）</h3><p>Sequence I/O: 600MB/s<br>Random I/O: 100KB/s</p>
+<h3 id="Zero-Copy"><a href="#Zero-Copy" class="headerlink" title="Zero Copy"></a>Zero Copy</h3><p>详解网址：<a href="http://ysjun.github.io/2016/05/14/zero-copy/，" target="_blank" rel="external">http://ysjun.github.io/2016/05/14/zero-copy/，</a><br>优点：sendfile系统调用实现零拷贝，减少上下文切换。</p>
 <hr>
 <p>作者 [soar]<br>2017年 06月 15日</p>
 
@@ -437,8 +451,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/06/10/日志系统架构设计/" rel="next" title="日志系统架构设计">
-                <i class="fa fa-chevron-left"></i> 日志系统架构设计
+              <a href="/2016/09/15/mysql-field-newline/" rel="next" title="mysql字段带有回车换行符号">
+                <i class="fa fa-chevron-left"></i> mysql字段带有回车换行符号
               </a>
             
           </div>
@@ -447,8 +461,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/07/16/rocketmq高性能之道/" rel="prev" title="rocketmq高性能之道">
-                rocketmq高性能之道 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/09/01/如何合理的设计接口/" rel="prev" title="如何合理的设计接口">
+                如何合理的设计接口 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -546,7 +560,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -559,7 +573,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -594,7 +608,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#kafka高性能之道"><span class="nav-number">1.</span> <span class="nav-text">kafka高性能之道</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#kafka高性能之道"><span class="nav-number">1.</span> <span class="nav-text">kafka高性能之道</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#生产者发送消息"><span class="nav-number">1.2.</span> <span class="nav-text">生产者发送消息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#并行发送消息Partition"><span class="nav-number">1.2.1.</span> <span class="nav-text">并行发送消息Partition</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#批处理"><span class="nav-number">1.2.2.</span> <span class="nav-text">批处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据压缩降低网络负载"><span class="nav-number">1.2.3.</span> <span class="nav-text">数据压缩降低网络负载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#高效的序列化方式"><span class="nav-number">1.2.4.</span> <span class="nav-text">高效的序列化方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#broker"><span class="nav-number">1.3.</span> <span class="nav-text">broker</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#PageCache"><span class="nav-number">1.3.1.</span> <span class="nav-text">PageCache</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#PageCache优点"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">PageCache优点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#JVM-GC缺点"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">JVM GC缺点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#消费者消费下消息"><span class="nav-number">1.4.</span> <span class="nav-text">消费者消费下消息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#PageCache-1"><span class="nav-number">1.4.1.</span> <span class="nav-text">PageCache</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#从磁盘读取数据方式（Sequence-I-O）"><span class="nav-number">1.4.2.</span> <span class="nav-text">从磁盘读取数据方式（Sequence I/O）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Zero-Copy"><span class="nav-number">1.4.3.</span> <span class="nav-text">Zero Copy</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>

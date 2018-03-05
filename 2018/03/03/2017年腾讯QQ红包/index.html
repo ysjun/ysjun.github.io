@@ -90,17 +90,19 @@
 
 
 
-<meta name="description" content="2017年腾讯QQ红包  作者 [soar]2018年 03月 03日">
+<meta name="description" content="2017年腾讯QQ红包 系统架构和数据流以上系统最大优点就应用层操作系统完全和db隔离，数据持久化的步骤：data-&amp;gt;redis-&amp;gt;rabbitmq-&amp;gt;mysql，但是还存在db单点问题，依赖无关系统Kafka影响系统性能。 系统优化过程根据压测报告和日志分析，不断优化性能短板。 应用内1.资源锁的问题2.多线程并发3.去掉重复冗余的代码 tomcat连接池1.加大连接数2.加大">
 <meta name="keywords" content="架构设计">
 <meta property="og:type" content="article">
 <meta property="og:title" content="2017年腾讯QQ红包">
 <meta property="og:url" content="http://yoursite.com/2018/03/03/2017年腾讯QQ红包/index.html">
 <meta property="og:site_name" content="三月的雨">
-<meta property="og:description" content="2017年腾讯QQ红包  作者 [soar]2018年 03月 03日">
-<meta property="og:updated_time" content="2018-03-04T16:32:53.298Z">
+<meta property="og:description" content="2017年腾讯QQ红包 系统架构和数据流以上系统最大优点就应用层操作系统完全和db隔离，数据持久化的步骤：data-&amp;gt;redis-&amp;gt;rabbitmq-&amp;gt;mysql，但是还存在db单点问题，依赖无关系统Kafka影响系统性能。 系统优化过程根据压测报告和日志分析，不断优化性能短板。 应用内1.资源锁的问题2.多线程并发3.去掉重复冗余的代码 tomcat连接池1.加大连接数2.加大">
+<meta property="og:image" content="http://yoursite.com/images/tags/架构设计/2017年腾讯QQ红包/架构设计-2017年腾讯QQ红包-red-packet.png">
+<meta property="og:updated_time" content="2018-03-05T13:03:19.113Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="2017年腾讯QQ红包">
-<meta name="twitter:description" content="2017年腾讯QQ红包  作者 [soar]2018年 03月 03日">
+<meta name="twitter:description" content="2017年腾讯QQ红包 系统架构和数据流以上系统最大优点就应用层操作系统完全和db隔离，数据持久化的步骤：data-&amp;gt;redis-&amp;gt;rabbitmq-&amp;gt;mysql，但是还存在db单点问题，依赖无关系统Kafka影响系统性能。 系统优化过程根据压测报告和日志分析，不断优化性能短板。 应用内1.资源锁的问题2.多线程并发3.去掉重复冗余的代码 tomcat连接池1.加大连接数2.加大">
+<meta name="twitter:image" content="http://yoursite.com/images/tags/架构设计/2017年腾讯QQ红包/架构设计-2017年腾讯QQ红包-red-packet.png">
 
 
 
@@ -358,7 +360,7 @@
                   <span class="post-meta-item-text">字数统计</span>
                 
                 <span title="字数统计">
-                  15
+                  521
                 </span>
               
 
@@ -374,7 +376,7 @@
                   <span class="post-meta-item-text">阅读时长</span>
                 
                 <span title="阅读时长">
-                  1
+                  2
                 </span>
               
             </div>
@@ -393,6 +395,18 @@
 
       
         <h1 id="2017年腾讯QQ红包"><a href="#2017年腾讯QQ红包" class="headerlink" title="2017年腾讯QQ红包"></a>2017年腾讯QQ红包</h1><hr>
+<h2 id="系统架构和数据流"><a href="#系统架构和数据流" class="headerlink" title="系统架构和数据流"></a>系统架构和数据流</h2><p><img src="/images/tags/架构设计/2017年腾讯QQ红包/架构设计-2017年腾讯QQ红包-red-packet.png" alt="question"><br>以上系统最大优点就应用层操作系统完全和db隔离，数据持久化的步骤：data-&gt;redis-&gt;rabbitmq-&gt;mysql，但是还存在db单点问题，依赖无关系统Kafka影响系统性能。</p>
+<h2 id="系统优化过程"><a href="#系统优化过程" class="headerlink" title="系统优化过程"></a>系统优化过程</h2><p>根据压测报告和日志分析，不断优化性能短板。</p>
+<h3 id="应用内"><a href="#应用内" class="headerlink" title="应用内"></a>应用内</h3><p>1.资源锁的问题<br>2.多线程并发<br>3.去掉重复冗余的代码</p>
+<h3 id="tomcat连接池"><a href="#tomcat连接池" class="headerlink" title="tomcat连接池"></a>tomcat连接池</h3><p>1.加大连接数<br>2.加大排队数(并不会加大TPS)</p>
+<h3 id="http"><a href="#http" class="headerlink" title="http"></a>http</h3><p>1.TCP并发链接(没有及时释放)，CLOSE_WAIT过多。<br>2.加大连接池连接数量</p>
+<h3 id="mysql"><a href="#mysql" class="headerlink" title="mysql"></a>mysql</h3><p>1.优化sql，避免复杂查询<br>2.优化索引,让每条select都走索引<br>3.加大连接池的最大连接数<br>4.尝试测试不同的连接池,选择性能最佳的</p>
+<h3 id="redis"><a href="#redis" class="headerlink" title="redis"></a>redis</h3><p>1.db中的数据load保存为hash（全表保存）<br>2.根据业务优化redis存储结构,减少redis查询次数<br>3.redis cpu为单核，大量查询会成为严重短板,进行分片处理和集群处理<br>4.过期时间不设置,可以测试出用户消耗的最大redis容量</p>
+<h3 id="加快消费者消费速度"><a href="#加快消费者消费速度" class="headerlink" title="加快消费者消费速度"></a>加快消费者消费速度</h3><p>1.增加消费者数量<br>2.增加消费者预读取数据数量<br>3.优化消费逻辑，例如db查询，逻辑判断</p>
+<h3 id="mq"><a href="#mq" class="headerlink" title="mq"></a>mq</h3><p>1.消息体一般为redis key,可以去redis拿取数据,优化消息存储大小<br>2.可以按功能不同,拆分多个队列,加快单逻辑处理速度</p>
+<h3 id="java启动脚本优化"><a href="#java启动脚本优化" class="headerlink" title="java启动脚本优化"></a>java启动脚本优化</h3><p>1.spring boot项目<br>2.优化jvm启动参数</p>
+<h3 id="项目初始化"><a href="#项目初始化" class="headerlink" title="项目初始化"></a>项目初始化</h3><p>1.将数据库数据先load到redis。可以控制速度，百万数据大概5min load完。</p>
+<h3 id="日志优化"><a href="#日志优化" class="headerlink" title="日志优化"></a>日志优化</h3><p>1.log4j2异步写日志文件<br>2.减少日志打印，例如正常请求仅打印入参和出参<br>3.搭建日志系统，自动收集服务器的日志，然后通过kafka发送给elk</p>
 <hr>
 <p>作者 [soar]<br>2018年 03月 03日</p>
 <hr>
@@ -438,8 +452,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/01/06/设计模式之责任链模式/" rel="next" title="设计模式之责任链模式">
-                <i class="fa fa-chevron-left"></i> 设计模式之责任链模式
+              <a href="/2017/10/11/client-request-double/" rel="next" title="客户端重复请求">
+                <i class="fa fa-chevron-left"></i> 客户端重复请求
               </a>
             
           </div>
@@ -543,7 +557,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -556,7 +570,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -591,7 +605,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#2017年腾讯QQ红包"><span class="nav-number">1.</span> <span class="nav-text">2017年腾讯QQ红包</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#2017年腾讯QQ红包"><span class="nav-number">1.</span> <span class="nav-text">2017年腾讯QQ红包</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#系统架构和数据流"><span class="nav-number">1.1.</span> <span class="nav-text">系统架构和数据流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#系统优化过程"><span class="nav-number">1.2.</span> <span class="nav-text">系统优化过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#应用内"><span class="nav-number">1.2.1.</span> <span class="nav-text">应用内</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tomcat连接池"><span class="nav-number">1.2.2.</span> <span class="nav-text">tomcat连接池</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#http"><span class="nav-number">1.2.3.</span> <span class="nav-text">http</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mysql"><span class="nav-number">1.2.4.</span> <span class="nav-text">mysql</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redis"><span class="nav-number">1.2.5.</span> <span class="nav-text">redis</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#加快消费者消费速度"><span class="nav-number">1.2.6.</span> <span class="nav-text">加快消费者消费速度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mq"><span class="nav-number">1.2.7.</span> <span class="nav-text">mq</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#java启动脚本优化"><span class="nav-number">1.2.8.</span> <span class="nav-text">java启动脚本优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#项目初始化"><span class="nav-number">1.2.9.</span> <span class="nav-text">项目初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#日志优化"><span class="nav-number">1.2.10.</span> <span class="nav-text">日志优化</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>

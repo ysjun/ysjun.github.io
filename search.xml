@@ -3,33 +3,9 @@
   <entry>
     <title><![CDATA[2017年腾讯QQ红包]]></title>
     <url>%2F2018%2F03%2F03%2F2017%E5%B9%B4%E8%85%BE%E8%AE%AFQQ%E7%BA%A2%E5%8C%85%2F</url>
-    <content type="text"><![CDATA[2017年腾讯QQ红包 作者 [soar]2018年 03月 03日]]></content>
+    <content type="text"><![CDATA[2017年腾讯QQ红包 系统架构和数据流以上系统最大优点就应用层操作系统完全和db隔离，数据持久化的步骤：data-&gt;redis-&gt;rabbitmq-&gt;mysql，但是还存在db单点问题，依赖无关系统Kafka影响系统性能。 系统优化过程根据压测报告和日志分析，不断优化性能短板。 应用内1.资源锁的问题2.多线程并发3.去掉重复冗余的代码 tomcat连接池1.加大连接数2.加大排队数(并不会加大TPS) http1.TCP并发链接(没有及时释放)，CLOSE_WAIT过多。2.加大连接池连接数量 mysql1.优化sql，避免复杂查询2.优化索引,让每条select都走索引3.加大连接池的最大连接数4.尝试测试不同的连接池,选择性能最佳的 redis1.db中的数据load保存为hash（全表保存）2.根据业务优化redis存储结构,减少redis查询次数3.redis cpu为单核，大量查询会成为严重短板,进行分片处理和集群处理4.过期时间不设置,可以测试出用户消耗的最大redis容量 加快消费者消费速度1.增加消费者数量2.增加消费者预读取数据数量3.优化消费逻辑，例如db查询，逻辑判断 mq1.消息体一般为redis key,可以去redis拿取数据,优化消息存储大小2.可以按功能不同,拆分多个队列,加快单逻辑处理速度 java启动脚本优化1.spring boot项目2.优化jvm启动参数 项目初始化1.将数据库数据先load到redis。可以控制速度，百万数据大概5min load完。 日志优化1.log4j2异步写日志文件2.减少日志打印，例如正常请求仅打印入参和出参3.搭建日志系统，自动收集服务器的日志，然后通过kafka发送给elk 作者 [soar]2018年 03月 03日]]></content>
       <tags>
         <tag>架构设计</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[设计模式之责任链模式]]></title>
-    <url>%2F2018%2F01%2F06%2F%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F%2F</url>
-    <content type="text"><![CDATA[设计模式之责任链模式 作者 [soar]2018年 01月 06日]]></content>
-      <tags>
-        <tag>设计模式</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[理财业务剖析]]></title>
-    <url>%2F2017%2F11%2F04%2F%E7%90%86%E8%B4%A2%E4%B8%9A%E5%8A%A1%E5%89%96%E6%9E%90%2F</url>
-    <content type="text"><![CDATA[理财业务剖析 作者 [soar]2017年 11月 04日]]></content>
-      <tags>
-        <tag>理财</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[理财业务架构]]></title>
-    <url>%2F2017%2F11%2F03%2F%E7%90%86%E8%B4%A2%E4%B8%9A%E5%8A%A1%E8%AE%BE%E8%AE%A1%2F</url>
-    <content type="text"><![CDATA[理财业务架构 作者 [soar]2017年 11月 03日]]></content>
-      <tags>
-        <tag>理财</tag>
       </tags>
   </entry>
   <entry>
@@ -49,43 +25,19 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[如何保证开发的质量]]></title>
-    <url>%2F2017%2F09%2F02%2F%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E5%BC%80%E5%8F%91%E7%9A%84%E8%B4%A8%E9%87%8F%2F</url>
-    <content type="text"><![CDATA[如何保证开发的质量 作者 [soar]2017年 09月 02日]]></content>
-      <tags>
-        <tag>开发之道</tag>
-      </tags>
-  </entry>
-  <entry>
     <title><![CDATA[如何合理的设计接口]]></title>
     <url>%2F2017%2F09%2F01%2F%E5%A6%82%E4%BD%95%E5%90%88%E7%90%86%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%8E%A5%E5%8F%A3%2F</url>
-    <content type="text"><![CDATA[如何合理的设计接口 作者 [soar]2017年 09月 01日]]></content>
+    <content type="text"><![CDATA[如何合理的设计接口 背景这里主要以信贷上传用户实心信息为例，在编码业务代码时，必须是基于设计思想，考虑可能问题，然后编码不同场景下不同用户操作的测试用例，最后进行断点调试，单元测试，接口测试，以及自动化测试。 设计思想可扩展，复用，解耦，简易性，必要性等。 考虑问题安全性，用户体验，性能等。 业务场景1.正常拍照2.非正常拍照3.通过接口传数据，同2 用户操作1.用户使用自己的身份证(是否在库)2.用户使用别人的身份证(是否在库)3.使用错误的身份证 业务代码1.校验身份证：数据合法性，身份证有效日期，判断该卡是否被使用(二要素鉴权，其实是没必要的);2.提交实名信息：判断身份证是否被使用，人脸二要素识别，实名信息落库。 作者 [soar]2017年 09月 01日]]></content>
       <tags>
         <tag>开发之道</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[rocketmq高性能之道]]></title>
-    <url>%2F2017%2F07%2F16%2Frocketmq%E9%AB%98%E6%80%A7%E8%83%BD%E4%B9%8B%E9%81%93%2F</url>
-    <content type="text"><![CDATA[rocketmq高性能之道 作者 [soar]2017年 07月 16日]]></content>
-      <tags>
-        <tag>rocketmq</tag>
       </tags>
   </entry>
   <entry>
     <title><![CDATA[kafka高性能之道]]></title>
     <url>%2F2017%2F06%2F15%2Fkafka%E9%AB%98%E6%80%A7%E8%83%BD%E4%B9%8B%E9%81%93%2F</url>
-    <content type="text"><![CDATA[kafka高性能之道 作者 [soar]2017年 06月 15日]]></content>
+    <content type="text"><![CDATA[kafka高性能之道 背景想要了解kafka的高性能的知识点，首先必须之道kafka整个处理消息的流程，这里主要以客户端发送消息-&gt;broker-&gt;消息者消费消息来描述。 生产者发送消息并行发送消息Partition是Kafka中横向扩展和一切并行化的基础，每个Topic都至少被切分为1个Partition，至于配置多少个Partition，如下分析：服务器配置如下：CPU：8 vCPU， Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz，2 Sockets，4 Cores per socket，1 Thread per core内存：16 GB磁盘：500 GB实验条件：3个Broker，1个Topic，无Replication，异步模式，3个Producer，消息Payload为100字节测试项目：分别测试1到9个Partition时的吞吐量测试结果：不同Partition数量时的集群总吞吐率如下图所示： 批处理批处理是一种常用的用于提高I/O性能的方式。对Kafka而言，批处理既减少了网络IO传输的次数，又提高了写磁盘的效率。 数据压缩降低网络负载Kafka从0.7开始，即支持将数据压缩后再传输给Broker。除了可以将每条消息单独压缩然后传输外，Kafka还支持在批量发送时，将整个Batch的消息一起压缩后传输。数据压缩的一个基本原理是，重复数据越多压缩效果越好。因此将整个Batch的数据一起压缩能更大幅度减小数据量，从而更大程度提高网络传输效率。Broker接收消息后，并不直接解压缩，而是直接将消息以压缩后的形式持久化到磁盘。Consumer Fetch到数据后再解压缩。因此Kafka的压缩不仅减少了Producer到Broker的网络传输负载，同时也降低了Broker磁盘操作的负载，也降低了Consumer与Broker间的网络传输量，从而极大得提高了传输效率，提高了吞吐量。 高效的序列化方式Kafka消息的Key和Payload（或者说Value）的类型可自定义，只需同时提供相应的序列化器和反序列化器即可。因此用户可以通过使用快速且紧凑的序列化-反序列化方式（如Avro，Protocal Buffer）来减少实际网络传输和磁盘存储的数据规模，从而提高吞吐率。这里要注意，如果使用的序列化方法太慢，即使压缩比非常高，最终的效率也不一定高。 brokerPageCacheKafka重度依赖底层操作系统提供的PageCache功能。当上层有写操作时，操作系统只是将数据写入PageCache，同时标记Page属性为Dirty。当读操作发生时，先从PageCache中查找，如果发生缺页才进行磁盘调度，最终返回需要的数据。实际上PageCache是把尽可能多的空闲内存都当做了磁盘缓存来使用。同时如果有其他进程申请内存，回收PageCache的代价又很小，所以现代的OS都支持PageCache。PageCache还只是第一步，Kafka为了进一步的优化性能还采用了Sendfile技术，也就是接下来说明的Zero Copy。 PageCache优点所有的In-Process Cache在OS中都有一份同样的PageCache。所以通过将缓存只放在PageCache，可以至少让可用缓存空间翻倍。 JVM GC缺点使用PageCache功能同时可以避免在JVM内部缓存数据，如果在Heap内管理缓存，JVM的GC线程会频繁扫描Heap空间，带来不必要的开销。如果Heap过大，执行一次Full GC对系统的可用性来说将是极大的挑战。 消费者消费下消息在这里消费者有两种消费消息的模式，一种是轮训poll，另一种就是订阅。无论是哪种，broker都要进行数据的准备。 PageCache详见broker-&gt;PageCache描述 从磁盘读取数据方式（Sequence I/O）Sequence I/O: 600MB/sRandom I/O: 100KB/s Zero Copy详解网址：http://ysjun.github.io/2016/05/14/zero-copy/，优点：sendfile系统调用实现零拷贝，减少上下文切换。 作者 [soar]2017年 06月 15日]]></content>
       <tags>
         <tag>kafka</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[日志系统架构设计]]></title>
-    <url>%2F2017%2F06%2F10%2F%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%2F</url>
-    <content type="text"><![CDATA[日志系统架构设计 作者 [soar]2017年 06月 10日]]></content>
-      <tags>
-        <tag>架构设计</tag>
       </tags>
   </entry>
   <entry>
